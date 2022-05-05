@@ -38,6 +38,6 @@ app.use("/quiz", QuizRoute);
 
 app.get("/", (req, res) => res.send("QUIZ API"));
 
-server.listen(process.env.PORT || 3000, () => {
+server.listen(process.env.PORT, () => {
   console.log("Server Started At ", process.env.PORT);
 });
