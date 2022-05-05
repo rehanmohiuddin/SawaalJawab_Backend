@@ -33,8 +33,8 @@ app.use(
   })
 );
 
-app.use("/", AuthRoute);
-app.use("/quiz", QuizRoute);
+app.use("/api", AuthRoute);
+app.use("/api/quiz", QuizRoute);
 
 app.get("/", (req, res) => res.send("QUIZ API"));
 
