@@ -36,7 +36,7 @@ app.use(
 app.use("/api", AuthRoute);
 app.use("/api/quiz", QuizRoute);
 
-app.get("/", (req, res) => res.send("QUIZ API"));
+app.get("/api/", (req, res) => res.send("QUIZ API"));
 
 server.listen(process.env.PORT, () => {
   console.log("Server Started At ", process.env.PORT);
