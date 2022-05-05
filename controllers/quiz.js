@@ -1,6 +1,6 @@
 const { sendErrorResponse } = require("../config/apiUtil");
 const { Quiz, Solutions, Submissions } = require("../models/quiz");
-const Upload = require("../Config/Upload");
+const { Upload } = require("../Config/Upload");
 const streamifier = require("streamifier");
 const { default: mongoose } = require("mongoose");
 
