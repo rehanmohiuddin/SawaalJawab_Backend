@@ -14,8 +14,8 @@ const io = new Server(server, {
   },
 });
 
-const AuthRoute = require("./api/auth");
-const QuizRoute = require("./api/quiz");
+const AuthRoute = require("./views/auth");
+const QuizRoute = require("./views/quiz");
 
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -33,13 +33,11 @@ app.use(
   })
 );
 
-app.use("/api", AuthRoute);
-app.use("/api/quiz", QuizRoute);
+app.use("/", AuthRoute);
+app.use("/quiz", QuizRoute);
 
-app.get("/api/", (req, res) => res.send("QUIZ API"));
+app.get("/", (req, res) => res.send("QUIZ API"));
 
-const PORT = process.env.PORT || 8080;
-
-server.listen(PORT, () => {
+server.listen(process.env.PORT, () => {
   console.log("Server Started At ", process.env.PORT);
 });
