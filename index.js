@@ -14,8 +14,8 @@ const io = new Server(server, {
   },
 });
 
-const AuthRoute = require("./views/auth");
-const QuizRoute = require("./views/quiz");
+const AuthRoute = require("./api/auth");
+const QuizRoute = require("./api/quiz");
 
 mongoose
   .connect(process.env.MONGO_URI, {
