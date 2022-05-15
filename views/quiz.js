@@ -9,6 +9,7 @@ const {
   getSubmissionsForQuiz,
   getQuiz,
   getQuizByCategory,
+  getAllQuiz,
 } = require("../controllers/quiz");
 const router = express.Router();
 
@@ -19,5 +20,6 @@ router.get("/created", verifyJwt, getCreatedQuizes);
 router.get("/responses", verifyJwt, getSubmissionsForQuiz);
 router.get("/details", verifyJwt, getQuiz);
 router.get("/category", verifyJwt, getQuizByCategory);
+router.get("/", verifyJwt, getAllQuiz);
 
 module.exports = router;

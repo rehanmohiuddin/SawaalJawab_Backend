@@ -28,6 +28,7 @@ const createQuiz = async (req, res) => {
       maxScore,
       solutions,
       category,
+      quizCreator,
     } = req.body;
     const _quiz = {
       title: title,
@@ -35,7 +36,8 @@ const createQuiz = async (req, res) => {
       quizCreator: uid,
       maxScore: maxScore,
       questions: questions,
-      category: category,
+      category: category.toLowerCase(),
+      quizCreator: quizCreator,
     };
     if (req.files) {
       const files = req.files;
@@ -77,9 +79,9 @@ const submitQuiz = async (req, res) => {
     const { quiz_id, answers, user_id } = req.body;
     const quiz = await Quiz.findOne({ _id: quiz_id });
     const sumbitted = await Submissions.findOne({ submittedBy: user_id });
-    if (sumbitted.submittedBy.equals(user_id) && sumbitted.quiz.equals(quiz_id))
-      sendErrorResponse(res, "Already Submitted", 200);
-    else if (quiz.deadline && new Date() > new Date(quiz.deadline))
+    // if (sumbitted.submittedBy.equals(user_id) && sumbitted.quiz.equals(quiz_id))
+    //   sendErrorResponse(res, "Already Submitted", 200);
+    if (quiz.deadline && new Date() > new Date(quiz.deadline))
       sendErrorResponse(
         res,
         "This Quiz Is No Longer Accepting The Solutions Now",
@@ -158,7 +160,7 @@ const getSubmissionsForQuiz = async (req, res) => {
     else {
       const submissions = await Submissions.find({
         quiz: quiz_id,
-      }).populate("submittedBy", "firstName lastName");
+      }).populate("submittedBy", "firstName lastName email");
       res.send({
         message: submissions,
       });
@@ -172,7 +174,10 @@ const getSubmissionsForQuiz = async (req, res) => {
 const getQuiz = async (req, res) => {
   try {
     const { quiz_id } = req.query;
-    const quiz = await Quiz.findOne({ _id: quiz_id });
+    const quiz = await Quiz.findOne({ _id: quiz_id }).populate(
+      "quizCreator",
+      "firstName lastName email"
+    );
     res.status(200).send({
       message: quiz,
     });
@@ -181,10 +186,24 @@ const getQuiz = async (req, res) => {
   }
 };
 
-const getQuizByCategory = async () => {
+const getQuizByCategory = async (req, res) => {
   try {
     const { categoryType } = req.query;
-    const quizes = await Quiz.find({ category: categoryType });
+    const quizes = await Quiz.find({ category: categoryType.toLowerCase() });
+    res.status(200).send({
+      message: quizes,
+    });
+  } catch (e) {
+    console.log(e);
+    sendErrorResponse(res, e);
+  }
+};
+
+const getAllQuiz = async (req, res) => {
+  try {
+    const quizes = await Quiz.find({})
+      .where("deadline")
+      .or([{ deadline: { $gte: new Date() } }, { deadline: null }]);
     res.status(200).send({
       message: quizes,
     });
@@ -201,4 +220,5 @@ module.exports = {
   getSubmissionsForQuiz: getSubmissionsForQuiz,
   getQuiz: getQuiz,
   getQuizByCategory: getQuizByCategory,
+  getAllQuiz: getAllQuiz,
 };
